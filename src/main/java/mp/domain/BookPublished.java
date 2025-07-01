@@ -6,7 +6,7 @@ import mp.domain.*;
 import mp.infra.AbstractEvent;
 
 @Data
-@ToStrings
+@ToString
 public class BookPublished extends AbstractEvent {
 
     private UUID id;
