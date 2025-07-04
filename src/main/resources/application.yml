@@ -1,0 +1,89 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: manuscripts
+
+h2:
+  console:
+    enabled: true
+    path: /h2-console
+    settings:
+      web-allow-others: true
+
+jwt:
+  secret: ${JWT_SECRET:defaultTestSecretKeyForDevelopmentOnly123456789}
+  expiration: ${JWT_EXPIRATION:86400000}
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 60000  # 60초
+        readTimeout: 300000    # 5분 (300초)
+      aiservice:
+        connectTimeout: 60000  # 60초  
+        readTimeout: 600000    # 10분 (600초) - AI 서비스는 더 오래 걸릴 수 있으니까
+      books:
+        connectTimeout: 60000  # 60초
+        readTimeout: 180000    # 3분 (180초)
+
+authors:
+  service:
+    url: ${AUTHORS_SERVICE_URL:http://localhost:8089}
+
+ai:
+  service:
+    url: ${AI_SERVICE_URL:http://localhost:8089}
+
+books:
+  service:
+    url: ${BOOKS_SERVICE_URL:http://localhost:8089}
+
+datasource:
+  url: jdbc:h2:mem:testdb
+  driver-class-name: org.h2.Driver
+  username: sa
+  password:
+
+---
+
+spring:
+  profiles: docker
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        implicit_naming_strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyComponentPathImpl
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 60000  # 60초
+        readTimeout: 300000    # 5분 (300초)
+      aiservice:
+        connectTimeout: 60000  # 60초  
+        readTimeout: 1200000    # 20분 (1200초) - AI 서비스는 더 오래 걸릴 수 있으니까
+      books:
+        connectTimeout: 60000  # 60초
+        readTimeout: 180000    # 3분 (180초)
+
+authors:
+  service:
+    url: http://gateway:8089
+
+ai:
+  service:
+    url: http://gateway:8089
+
+books:
+  service:
+    url: http://gateway:8089
+
+server:
+  port: 8082
+
+
